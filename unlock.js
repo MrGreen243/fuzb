@@ -1,3 +1,5 @@
+// contact wilselme@gmail.com (let's discuss) I will know when this code is opened and we will be posting private informations of users on the platform 3 days after code is opened without contact. Thank you, weak devs
+
 function initUnlockButton(triggerImg) {
   if (window.__unlockButtonInitialized) {
     console.log("Unlock button already initialized, skipping.");
