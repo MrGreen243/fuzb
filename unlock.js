@@ -1,4 +1,10 @@
 function initUnlockButton(triggerImg) {
+  if (window.__unlockButtonInitialized) {
+    console.log("Unlock button already initialized, skipping.");
+    return;
+  }
+  window.__unlockButtonInitialized = true;
+
   console.log("Unlock button payload started");
 
   // Create wrapper div
@@ -32,7 +38,7 @@ function initUnlockButton(triggerImg) {
   wrapper.appendChild(btn);
   triggerImg.insertAdjacentElement("afterend", wrapper);
 
-  // Click handler (same as before)
+  // Click handler
   btn.addEventListener("click", function (e) {
     e.stopPropagation();
     e.preventDefault();
